@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaEase - Water Intake Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+</head>
+<body>
+    <!-- Navigation Tabs -->
+    <nav class="main-nav">
+        <button class="nav-tab active" data-tab="tracker">
+            <i class="fas fa-tint"></i> Tracker
+        </button>
+        <button class="nav-tab" data-tab="achievements">
+            <i class="fas fa-trophy"></i> Achievements
+        </button>
+        <button class="nav-tab" data-tab="plant">
+            <i class="fas fa-seedling"></i> Plant
+        </button>
+        <button class="nav-tab" data-tab="journal">
+            <i class="fas fa-book"></i> Journal
+        </button>
+        <button class="nav-tab" data-tab="health">
+            <i class="fas fa-heartbeat"></i> Health
+        </button>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <!-- Tracker Tab -->
+        <div class="tab-content active" id="tracker-tab">
+            <!-- Welcome Modal -->
+            <div id="welcomeModal" class="modal">
+                <div class="modal-content">
+                    <div class="logo-container">
+                        <i class="fas fa-tint"></i>
+                        <h2>AquaEase</h2>
+                    </div>
+                    <p>Let's calculate your personalized daily water intake based on your age, weight, and gender.</p>
+                    <form id="userInfoForm">
+                        <div class="form-group">
+                            <label for="age">Age:</label>
+                            <input type="number" id="age" min="1" max="120" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender:</label>
+                            <select id="gender" required>
+                                <option value="">Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight (lbs):</label>
+                            <input type="number" id="weight" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="activity">Activity Level:</label>
+                            <select id="activity" required>
+                                <option value="">Select activity level</option>
+                                <option value="sedentary">Sedentary</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="active">Active</option>
+                                <option value="very_active">Very Active</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="gradient-button">Calculate</button>
+                    </form>
+                </div>
+            </div>
+
+            <header>
+                <div class="logo-container">
+                    <i class="fas fa-tint"></i>
+                    <h1>AquaEase</h1>
+                </div>
+                <div class="stats">
+                    <div class="streak-counter">
+                        <i class="fas fa-fire"></i>
+                        <span id="streakCount">0</span>
+                        <span>day streak</span>
+                        <button id="resetStreakBtn" class="icon-button" title="Reset Streak">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                    </div>
+                    <div class="total-counter">
+                        <i class="fas fa-chart-line"></i>
+                        <span id="totalWater">0</span>
+                        <span>total oz</span>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="goal-setter">
+                <label for="dailyGoal">Daily Goal (oz):</label>
+                <input type="number" id="dailyGoal" min="1" value="80">
+                <div class="preset-goals">
+                    <button class="preset-goal gradient-button" data-amount="64">64 oz</button>
+                    <button class="preset-goal gradient-button" data-amount="80">80 oz</button>
+                    <button class="preset-goal gradient-button" data-amount="100">100 oz</button>
+                </div>
+                <button id="getRecommendationBtn" class="icon-button recommendation-btn" title="Get Personalized Recommendation">
+                    <i class="fas fa-calculator"></i> Get Personalized Recommendation
+                </button>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-circle">
+                    <div class="progress-circle-fill"></div>
+                    <div class="progress-circle-overlay">
+                        <span id="currentAmount">0</span>
+                        <span>oz</span>
+                    </div>
+                </div>
+                <div class="progress-text">
+                    <span id="progressPercentage">0%</span>
+                    <span>of daily goal</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="quick-add">
+                    <h3>Quick Add</h3>
+                    <div class="button-group">
+                        <button class="add-water" data-amount="8">+8 oz</button>
+                        <button class="add-water" data-amount="16">+16 oz</button>
+                        <button class="add-water" data-amount="24">+24 oz</button>
+                    </div>
+                </div>
+                <div class="custom-add">
+                    <h3>Custom Amount</h3>
+                    <div class="custom-input">
+                        <input type="number" id="customAmount" min="1" placeholder="Enter amount">
+                        <button id="addCustomBtn">Add</button>
+                    </div>
+                </div>
+                <div class="bottle-presets">
+                    <h3>Common Bottles</h3>
+                    <div class="bottle-grid">
+                        <div class="bottle-item">
+                            <div class="bottle-visual" data-amount="16">
+                                <div class="bottle-shape">
+                                    <div class="bottle-fill"></div>
+                                </div>
+                            </div>
+                            <button class="add-water" data-amount="16" title="Standard Bottle">16 oz</button>
+                        </div>
+                        <div class="bottle-item">
+                            <div class="bottle-visual" data-amount="20">
+                                <div class="bottle-shape">
+                                    <div class="bottle-fill"></div>
+                                </div>
+                            </div>
+                            <button class="add-water" data-amount="20" title="Large Bottle">20 oz</button>
+                        </div>
+                        <div class="bottle-item">
+                            <div class="bottle-visual" data-amount="32">
+                                <div class="bottle-shape">
+                                    <div class="bottle-fill"></div>
+                                </div>
+                            </div>
+                            <button class="add-water" data-amount="32" title="Hydro Flask">32 oz</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history">
+                <div class="history-header">
+                    <h2><i class="fas fa-history"></i> Today's History</h2>
+                    <button id="clearHistoryBtn" class="icon-button" title="Clear History">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div id="historyList"></div>
+            </div>
+
+            <div class="settings">
+                <button id="resetBtn" class="danger-button">
+                    <i class="fas fa-redo"></i> Reset Today's Progress
+                </button>
+                <div class="theme-toggle">
+                    <button id="themeToggleBtn" class="icon-button" title="Toggle Theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Tab -->
+        <div class="tab-content" id="achievements-tab">
+            <h2><i class="fas fa-trophy"></i> Achievements</h2>
+            <div class="achievements-grid">
+                <div class="achievement-card" data-achievement="first-drink">
+                    <i class="fas fa-tint"></i>
+                    <h3>First Drink</h3>
+                    <p>Log your first drink</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="achievement-card" data-achievement="streak-7">
+                    <i class="fas fa-fire"></i>
+                    <h3>7-Day Streak</h3>
+                    <p>Maintain a 7-day streak</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="achievement-card" data-achievement="goal-master">
+                    <i class="fas fa-star"></i>
+                    <h3>Goal Master</h3>
+                    <p>Meet your daily goal 5 times</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <!-- Add more achievements -->
+            </div>
+        </div>
+
+        <!-- Plant Tab -->
+        <div class="tab-content" id="plant-tab">
+            <h2><i class="fas fa-seedling"></i> Your Hydration Plant</h2>
+            <div class="plant-container">
+                <div class="plant-visual">
+                    <div class="pot"></div>
+                    <div class="plant">
+                        <div class="stem"></div>
+                        <div class="leaves"></div>
+                        <div class="flower"></div>
+                    </div>
+                </div>
+                <div class="plant-status">
+                    <h3>Plant Status</h3>
+                    <p>Your plant is <span class="plant-health">healthy</span></p>
+                    <div class="plant-stats">
+                        <div class="stat">
+                            <i class="fas fa-tint"></i>
+                            <span>Hydration Level: 75%</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-sun"></i>
+                            <span>Growth Stage: 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Journal Tab -->
+        <div class="tab-content" id="journal-tab">
+            <h2><i class="fas fa-book"></i> Hydration Journal</h2>
+            <div class="journal-container">
+                <div class="journal-entry">
+                    <h3>New Entry</h3>
+                    <form id="journalForm">
+                        <div class="form-group">
+                            <label for="entryDate">Date:</label>
+                            <input type="date" id="entryDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="energyLevel">Energy Level:</label>
+                            <input type="range" id="energyLevel" min="1" max="5" value="3">
+                        </div>
+                        <div class="form-group">
+                            <label for="headache">Headache:</label>
+                            <select id="headache">
+                                <option value="none">None</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Notes:</label>
+                            <textarea id="notes" rows="4" placeholder="How are you feeling today?"></textarea>
+                        </div>
+                        <button type="submit" class="gradient-button">Save Entry</button>
+                    </form>
+                </div>
+                <div class="journal-history">
+                    <h3>Previous Entries</h3>
+                    <div id="journalEntries"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Integration Tab -->
+        <div class="tab-content" id="health-tab">
+            <h2><i class="fas fa-heartbeat"></i> Health Integration</h2>
+            <div class="health-integration">
+                <div class="integration-options">
+                    <button class="integration-btn" data-provider="apple">
+                        <i class="fab fa-apple"></i> Apple Health
+                    </button>
+                    <button class="integration-btn" data-provider="google">
+                        <i class="fab fa-google"></i> Google Fit
+                    </button>
+                    <button class="integration-btn" data-provider="fitbit">
+                        <i class="fab fa-fitbit"></i> Fitbit
+                    </button>
+                </div>
+                <div class="integration-status">
+                    <h3>Connected Services</h3>
+                    <div id="connectedServices"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button id="themeToggleBtn" class="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html> 
