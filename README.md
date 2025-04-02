@@ -14,15 +14,6 @@ A modern, responsive web application for tracking your daily water intake and ma
 - 🔄 Health app integration (Apple Health, Google Fit, Fitbit)
 - 🥤 Support for different beverage types (water, tea, juice, coffee)
 
-## Getting Started
-
-1. Clone the repository:
-```bash
-git clone https://github.com/CalamityI/AquaEase.git
-```
-
-2. Open `index.html` in your web browser to start using the app.
-
 ## Usage
 
 1. Set your daily water intake goal
